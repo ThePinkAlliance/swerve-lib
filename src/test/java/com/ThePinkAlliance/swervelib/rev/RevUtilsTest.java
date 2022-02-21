@@ -13,8 +13,7 @@ class RevUtilsTest {
     // assertThrows(RuntimeException.class, () -> RevUtils.checkNeoError(REVLibError.kError, ""));
     // assertThrows(RuntimeException.class, () -> RevUtils.checkNeoError(REVLibError.kCantFindFirmware, ""));
     // assertDoesNotThrow(() -> RevUtils.checkNeoError(REVLibError.kOk, ""));
-  }
-}
+
     // assertThrows(RuntimeException.class, () -> RevUtils.checkNeoError(REVLibError.kCantFindFirmware, ""));
     // assertDoesNotThrow(() -> RevUtils.checkNeoError(REVLibError.kOk, ""));
   }

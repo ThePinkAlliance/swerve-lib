@@ -34,9 +34,3 @@ public class SdsModuleConfigurationsTest {
     );
   }
 }
-    @Test
-    void mk3FastReductions() {
-        assertEquals(1.0 / 6.86, SdsModuleConfigurations.MK3_FAST.getDriveReduction(), 1e-4);
-        assertEquals(1.0 / 12.8, SdsModuleConfigurations.MK3_FAST.getSteerReduction(), 1e-4);
-    }
-}
