@@ -125,6 +125,11 @@ public final class NeoDriveControllerFactoryBuilder {
     }
 
     @Override
+    public void configRampRate(double rampRate) {
+      this.motor.setOpenLoopRampRate(rampRate);
+    }
+
+    @Override
     public void reset() {
       encoder.setPosition(0);
     }

@@ -68,6 +68,11 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
     }
 
     @Override
+    public void configRampRate(double rampRate) {
+      this.driveController.configRampRate(rampRate);
+    }
+
+    @Override
     public double getDrivePosition() {
       return driveController.getPosition();
     }

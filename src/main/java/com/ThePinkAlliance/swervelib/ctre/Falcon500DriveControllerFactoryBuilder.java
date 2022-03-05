@@ -123,6 +123,11 @@ public final class Falcon500DriveControllerFactoryBuilder {
     }
 
     @Override
+    public void configRampRate(double rampRate) {
+      this.motor.configOpenloopRamp(rampRate);
+    }
+
+    @Override
     public void reset() {
       this.motor.setSelectedSensorPosition(0);
     }

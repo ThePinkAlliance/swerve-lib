@@ -7,6 +7,8 @@ public interface SwerveModule {
 
   void resetDrive();
 
+  void configRampRate(double rampRate);
+
   double getDrivePosition();
 
   void set(double driveVoltage, double steerAngle);
