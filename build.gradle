@@ -22,6 +22,8 @@ allprojects {
 
         // REV
         maven { url = uri('https://maven.revrobotics.com/') }
+
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -31,6 +33,9 @@ dependencies {
     // CTRE is implementation because it is not a hard requirement
     implementation 'com.ctre.phoenix:api-java:5.20.2'
     implementation 'com.ctre.phoenix:wpiapi-java:5.20.2'
+
+    // Pink Alliance core library develop version, NOTE: Remove this before a production release.
+    implementation("com.github.ThePinkAlliance:core:d4be80f3ff")
 
     // REV is implementation because it is not a hard requirement
     implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
