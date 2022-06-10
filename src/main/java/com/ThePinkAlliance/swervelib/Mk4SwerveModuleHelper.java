@@ -1,5 +1,6 @@
 package com.ThePinkAlliance.swervelib;
 
+import com.ThePinkAlliance.core.drivetrain.swerve.SwerveModuleConfig;
 import com.ThePinkAlliance.swervelib.ctre.*;
 import com.ThePinkAlliance.swervelib.rev.NeoDriveControllerFactoryBuilder;
 import com.ThePinkAlliance.swervelib.rev.NeoSteerConfiguration;
@@ -113,6 +114,31 @@ public final class Mk4SwerveModuleHelper {
       steerMotorPort,
       steerEncoderPort,
       steerOffset
+    );
+  }
+
+  /**
+   * Creates a Mk4 swerve module that uses Falcon 500s for driving and steering.
+   * Module information is displayed in the specified ShuffleBoard container.
+   *
+   * @param container        The container to display module information in.
+   * @param gearRatio        The gearing configuration the module is in.
+   * @param config           The swerve module config with motor and encoder ports.
+   * @return The configured swerve module.
+   */
+  public static SwerveModule createFalcon500(
+    ShuffleboardLayout container,
+    GearRatio gearRatio,
+    SwerveModuleConfig config
+  ) {
+    return createFalcon500(
+      container,
+      new Mk4ModuleConfiguration(),
+      gearRatio,
+      config.getMotorDrivePort(),
+      config.getMotorSteerPort(),
+      config.getCanCoderPort(),
+      config.getSteerOffset()
     );
   }
 
