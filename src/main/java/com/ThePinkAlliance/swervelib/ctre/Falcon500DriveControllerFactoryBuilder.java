@@ -106,7 +106,7 @@ public final class Falcon500DriveControllerFactoryBuilder {
         double fullVel = (((1 / moduleConfiguration.getDriveReduction()) * 12.875) / (13.5 * 12))
             * TICKS_PER_ROTATION;
 
-        // this is not correct but its an ok filler for now.
+        // this is not correct, but it's an ok filler for now.
         double accelToFullTime = ((fullVel / fullVelPer100Mills) / 1000);
 
         ctrePhysicsSim.addTalonFX(motor, accelToFullTime, fullVel);

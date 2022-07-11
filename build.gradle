@@ -34,8 +34,8 @@ dependencies {
     implementation 'com.ctre.phoenix:api-java:5.20.2'
     implementation 'com.ctre.phoenix:wpiapi-java:5.20.2'
 
-    // Pink Alliance core library develop version, NOTE: Remove this before a production release.
-    implementation("com.github.ThePinkAlliance:core:develop-SNAPSHOT")
+    // Pink Alliance core library production release.
+    implementation("com.github.ThePinkAlliance:core:2.0.15")
 
     // REV is implementation because it is not a hard requirement
     implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
