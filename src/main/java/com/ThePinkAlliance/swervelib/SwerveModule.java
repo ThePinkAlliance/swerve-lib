@@ -5,11 +5,11 @@ public interface SwerveModule {
 
   double getSteerAngle();
 
+  double getDrivePosition();
+
   void resetDrive();
 
   void configRampRate(double rampRate);
-
-  double getDrivePosition();
 
   void set(double driveVoltage, double steerAngle);
 }
