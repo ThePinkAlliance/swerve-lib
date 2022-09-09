@@ -1,5 +1,7 @@
 package com.ThePinkAlliance.swervelib;
 
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+
 public interface SwerveModule {
   double getDriveVelocity();
 
@@ -8,6 +10,8 @@ public interface SwerveModule {
   void resetDrive();
 
   void configRampRate(double rampRate);
+
+  void configureStatusFrame(StatusFrame frame, int period);
 
   double getDrivePosition();
 

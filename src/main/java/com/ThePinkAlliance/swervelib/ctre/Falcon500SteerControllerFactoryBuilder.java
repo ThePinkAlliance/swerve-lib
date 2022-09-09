@@ -29,10 +29,9 @@ public final class Falcon500SteerControllerFactoryBuilder {
   private double currentLimit = Double.NaN;
 
   public Falcon500SteerControllerFactoryBuilder withPidConstants(
-    double proportional,
-    double integral,
-    double derivative
-  ) {
+      double proportional,
+      double integral,
+      double derivative) {
     this.proportionalConstant = proportional;
     this.integralConstant = integral;
     this.derivativeConstant = derivative;
@@ -40,18 +39,15 @@ public final class Falcon500SteerControllerFactoryBuilder {
   }
 
   public boolean hasPidConstants() {
-    return (
-      Double.isFinite(proportionalConstant) &&
-      Double.isFinite(integralConstant) &&
-      Double.isFinite(derivativeConstant)
-    );
+    return (Double.isFinite(proportionalConstant) &&
+        Double.isFinite(integralConstant) &&
+        Double.isFinite(derivativeConstant));
   }
 
   public Falcon500SteerControllerFactoryBuilder withMotionMagic(
-    double velocityConstant,
-    double accelerationConstant,
-    double staticConstant
-  ) {
+      double velocityConstant,
+      double accelerationConstant,
+      double staticConstant) {
     this.velocityConstant = velocityConstant;
     this.accelerationConstant = accelerationConstant;
     this.staticConstant = staticConstant;
@@ -59,16 +55,13 @@ public final class Falcon500SteerControllerFactoryBuilder {
   }
 
   public boolean hasMotionMagic() {
-    return (
-      Double.isFinite(velocityConstant) &&
-      Double.isFinite(accelerationConstant) &&
-      Double.isFinite(staticConstant)
-    );
+    return (Double.isFinite(velocityConstant) &&
+        Double.isFinite(accelerationConstant) &&
+        Double.isFinite(staticConstant));
   }
 
   public Falcon500SteerControllerFactoryBuilder withVoltageCompensation(
-    double nominalVoltage
-  ) {
+      double nominalVoltage) {
     this.nominalVoltage = nominalVoltage;
     return this;
   }
@@ -78,8 +71,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
   }
 
   public Falcon500SteerControllerFactoryBuilder withCurrentLimit(
-    double currentLimit
-  ) {
+      double currentLimit) {
     this.currentLimit = currentLimit;
     return this;
   }
@@ -89,13 +81,12 @@ public final class Falcon500SteerControllerFactoryBuilder {
   }
 
   public <T> SteerControllerFactory<ControllerImplementation, Falcon500SteerConfiguration<T>> build(
-    AbsoluteEncoderFactory<T> absoluteEncoderFactory
-  ) {
+      AbsoluteEncoderFactory<T> absoluteEncoderFactory) {
     return new FactoryImplementation<>(absoluteEncoderFactory);
   }
 
   private class FactoryImplementation<T>
-    implements
+      implements
       SteerControllerFactory<ControllerImplementation, Falcon500SteerConfiguration<T>> {
 
     private final AbsoluteEncoderFactory<T> encoderFactory;
@@ -106,30 +97,25 @@ public final class Falcon500SteerControllerFactoryBuilder {
 
     @Override
     public void addDashboardEntries(
-      ShuffleboardContainer container,
-      ControllerImplementation controller
-    ) {
+        ShuffleboardContainer container,
+        ControllerImplementation controller) {
       SteerControllerFactory.super.addDashboardEntries(container, controller);
       container.addNumber(
-        "Absolute Encoder Angle",
-        () -> Math.toDegrees(controller.absoluteEncoder.getAbsoluteAngle())
-      );
+          "Absolute Encoder Angle",
+          () -> Math.toDegrees(controller.absoluteEncoder.getAbsoluteAngle()));
     }
 
     @Override
     public ControllerImplementation create(
-      Falcon500SteerConfiguration<T> steerConfiguration,
-      ModuleConfiguration moduleConfiguration
-    ) {
+        Falcon500SteerConfiguration<T> steerConfiguration,
+        ModuleConfiguration moduleConfiguration) {
       AbsoluteEncoder absoluteEncoder = encoderFactory.create(
-        steerConfiguration.getEncoderConfiguration()
-      );
+          steerConfiguration.getEncoderConfiguration());
 
-      final double sensorPositionCoefficient =
-        2.0 *
-        Math.PI /
-        TICKS_PER_ROTATION *
-        moduleConfiguration.getSteerReduction();
+      final double sensorPositionCoefficient = 2.0 *
+          Math.PI /
+          TICKS_PER_ROTATION *
+          moduleConfiguration.getSteerReduction();
       final double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
 
       TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
@@ -140,17 +126,16 @@ public final class Falcon500SteerControllerFactoryBuilder {
       }
       if (hasMotionMagic()) {
         if (hasVoltageCompensation()) {
-          motorConfiguration.slot0.kF =
-            (1023.0 * sensorVelocityCoefficient / nominalVoltage) *
-            velocityConstant;
+          motorConfiguration.slot0.kF = (1023.0 * sensorVelocityCoefficient / nominalVoltage) *
+              velocityConstant;
         }
-        // TODO: What should be done if no nominal voltage is configured? Use a default voltage?
+        // TODO: What should be done if no nominal voltage is configured? Use a default
+        // voltage?
 
-        // TODO: Make motion magic max voltages configurable or dynamically determine optimal values
-        motorConfiguration.motionCruiseVelocity =
-          2.0 / velocityConstant / sensorVelocityCoefficient;
-        motorConfiguration.motionAcceleration =
-          (8.0 - 2.0) / accelerationConstant / sensorVelocityCoefficient;
+        // TODO: Make motion magic max voltages configurable or dynamically determine
+        // optimal values
+        motorConfiguration.motionCruiseVelocity = 2.0 / velocityConstant / sensorVelocityCoefficient;
+        motorConfiguration.motionAcceleration = (8.0 - 2.0) / accelerationConstant / sensorVelocityCoefficient;
       }
       if (hasVoltageCompensation()) {
         motorConfiguration.voltageCompSaturation = nominalVoltage;
@@ -162,57 +147,48 @@ public final class Falcon500SteerControllerFactoryBuilder {
 
       TalonFX motor = new TalonFX(steerConfiguration.getMotorPort());
       checkCtreError(
-        motor.configAllSettings(motorConfiguration, CAN_TIMEOUT_MS),
-        "Failed to configure Falcon 500 settings"
-      );
+          motor.configAllSettings(motorConfiguration, CAN_TIMEOUT_MS),
+          "Failed to configure Falcon 500 settings");
 
       if (hasVoltageCompensation()) {
         motor.enableVoltageCompensation(true);
       }
       checkCtreError(
-        motor.configSelectedFeedbackSensor(
-          TalonFXFeedbackDevice.IntegratedSensor,
-          0,
-          CAN_TIMEOUT_MS
-        ),
-        "Failed to set Falcon 500 feedback sensor"
-      );
+          motor.configSelectedFeedbackSensor(
+              TalonFXFeedbackDevice.IntegratedSensor,
+              0,
+              CAN_TIMEOUT_MS),
+          "Failed to set Falcon 500 feedback sensor");
       motor.setSensorPhase(true);
       motor.setInverted(
-        moduleConfiguration.isSteerInverted()
-          ? TalonFXInvertType.CounterClockwise
-          : TalonFXInvertType.Clockwise
-      );
+          moduleConfiguration.isSteerInverted()
+              ? TalonFXInvertType.CounterClockwise
+              : TalonFXInvertType.Clockwise);
       motor.setNeutralMode(NeutralMode.Brake);
 
       checkCtreError(
-        motor.setSelectedSensorPosition(
-          absoluteEncoder.getAbsoluteAngle() / sensorPositionCoefficient,
-          0,
-          CAN_TIMEOUT_MS
-        ),
-        "Failed to set Falcon 500 encoder position"
-      );
+          motor.setSelectedSensorPosition(
+              absoluteEncoder.getAbsoluteAngle() / sensorPositionCoefficient,
+              0,
+              CAN_TIMEOUT_MS),
+          "Failed to set Falcon 500 encoder position");
 
       // Reduce CAN status frame rates
       CtreUtils.checkCtreError(
-        motor.setStatusFramePeriod(
-          StatusFrameEnhanced.Status_1_General,
-          STATUS_FRAME_GENERAL_PERIOD_MS,
-          CAN_TIMEOUT_MS
-        ),
-        "Failed to configure Falcon status frame period"
-      );
+          motor.setStatusFramePeriod(
+              StatusFrameEnhanced.Status_1_General,
+              STATUS_FRAME_GENERAL_PERIOD_MS,
+              CAN_TIMEOUT_MS),
+          "Failed to configure Falcon status frame period");
 
       return new ControllerImplementation(
-        motor,
-        sensorPositionCoefficient,
-        sensorVelocityCoefficient,
-        hasMotionMagic()
-          ? TalonFXControlMode.MotionMagic
-          : TalonFXControlMode.Position,
-        absoluteEncoder
-      );
+          motor,
+          sensorPositionCoefficient,
+          sensorVelocityCoefficient,
+          hasMotionMagic()
+              ? TalonFXControlMode.MotionMagic
+              : TalonFXControlMode.Position,
+          absoluteEncoder);
     }
   }
 
@@ -220,8 +196,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
 
     private static final int ENCODER_RESET_ITERATIONS = 500;
     private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(
-      0.5
-    );
+        0.5);
 
     private final TalonFX motor;
     private final double motorEncoderPositionCoefficient;
@@ -234,12 +209,11 @@ public final class Falcon500SteerControllerFactoryBuilder {
     private double resetIteration = 0;
 
     private ControllerImplementation(
-      TalonFX motor,
-      double motorEncoderPositionCoefficient,
-      double motorEncoderVelocityCoefficient,
-      TalonFXControlMode motorControlMode,
-      AbsoluteEncoder absoluteEncoder
-    ) {
+        TalonFX motor,
+        double motorEncoderPositionCoefficient,
+        double motorEncoderVelocityCoefficient,
+        TalonFXControlMode motorControlMode,
+        AbsoluteEncoder absoluteEncoder) {
       this.motor = motor;
       this.motorEncoderPositionCoefficient = motorEncoderPositionCoefficient;
       this.motorEncoderVelocityCoefficient = motorEncoderVelocityCoefficient;
@@ -253,24 +227,26 @@ public final class Falcon500SteerControllerFactoryBuilder {
     }
 
     @Override
+    public void configureStatusFrame(StatusFrame frame, int period) {
+      this.motor.setStatusFramePeriod(frame, period);
+    }
+
+    @Override
     public void setReferenceAngle(double referenceAngleRadians) {
-      double currentAngleRadians =
-        motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient;
+      double currentAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient;
 
       // Reset the NEO's encoder periodically when the module is not rotating.
-      // Sometimes (~5% of the time) when we initialize, the absolute encoder isn't fully set up, and we don't
-      // end up getting a good reading. If we reset periodically this won't matter anymore.
-      if (
-        motor.getSelectedSensorVelocity() *
-        motorEncoderVelocityCoefficient <
-        ENCODER_RESET_MAX_ANGULAR_VELOCITY
-      ) {
+      // Sometimes (~5% of the time) when we initialize, the absolute encoder isn't
+      // fully set up, and we don't
+      // end up getting a good reading. If we reset periodically this won't matter
+      // anymore.
+      if (motor.getSelectedSensorVelocity() *
+          motorEncoderVelocityCoefficient < ENCODER_RESET_MAX_ANGULAR_VELOCITY) {
         if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
           resetIteration = 0;
           double absoluteAngle = absoluteEncoder.getAbsoluteAngle();
           motor.setSelectedSensorPosition(
-            absoluteAngle / motorEncoderPositionCoefficient
-          );
+              absoluteAngle / motorEncoderPositionCoefficient);
           currentAngleRadians = absoluteAngle;
         }
       } else {
@@ -282,9 +258,9 @@ public final class Falcon500SteerControllerFactoryBuilder {
         currentAngleRadiansMod += 2.0 * Math.PI;
       }
 
-      // The reference angle has the range [0, 2pi) but the Falcon's encoder can go above that
-      double adjustedReferenceAngleRadians =
-        referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod;
+      // The reference angle has the range [0, 2pi) but the Falcon's encoder can go
+      // above that
+      double adjustedReferenceAngleRadians = referenceAngleRadians + currentAngleRadians - currentAngleRadiansMod;
       if (referenceAngleRadians - currentAngleRadiansMod > Math.PI) {
         adjustedReferenceAngleRadians -= 2.0 * Math.PI;
       } else if (referenceAngleRadians - currentAngleRadiansMod < -Math.PI) {
@@ -292,17 +268,15 @@ public final class Falcon500SteerControllerFactoryBuilder {
       }
 
       motor.set(
-        motorControlMode,
-        adjustedReferenceAngleRadians / motorEncoderPositionCoefficient
-      );
+          motorControlMode,
+          adjustedReferenceAngleRadians / motorEncoderPositionCoefficient);
 
       this.referenceAngleRadians = referenceAngleRadians;
     }
 
     @Override
     public double getStateAngle() {
-      double motorAngleRadians =
-        motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient;
+      double motorAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient;
       motorAngleRadians %= 2.0 * Math.PI;
       if (motorAngleRadians < 0.0) {
         motorAngleRadians += 2.0 * Math.PI;
