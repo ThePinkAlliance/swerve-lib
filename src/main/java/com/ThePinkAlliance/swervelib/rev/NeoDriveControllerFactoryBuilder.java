@@ -5,10 +5,12 @@ import static com.ThePinkAlliance.swervelib.rev.RevUtils.checkNeoError;
 import com.ThePinkAlliance.swervelib.DriveController;
 import com.ThePinkAlliance.swervelib.DriveControllerFactory;
 import com.ThePinkAlliance.swervelib.ModuleConfiguration;
+import com.ThePinkAlliance.swervelib.ZeroState;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 public final class NeoDriveControllerFactoryBuilder {
 
@@ -109,6 +111,15 @@ public final class NeoDriveControllerFactoryBuilder {
     @Override
     public double getPosition() {
       return encoder.getPosition();
+    }
+
+    @Override
+    public void configureZeroState(ZeroState state) {
+      if (state == ZeroState.BRAKE) {
+        this.motor.setIdleMode(IdleMode.kBrake);
+      } else if (state == ZeroState.COAST) {
+        this.motor.setIdleMode(IdleMode.kCoast);
+      }
     }
 
     @Override

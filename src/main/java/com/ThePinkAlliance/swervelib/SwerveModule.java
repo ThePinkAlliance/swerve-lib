@@ -13,6 +13,8 @@ public interface SwerveModule {
 
   void configureStatusFrame(StatusFrame frame, int period);
 
+  void configureDriveZeroState(ZeroState state);
+
   double getDrivePosition();
 
   void set(double driveVoltage, double steerAngle);

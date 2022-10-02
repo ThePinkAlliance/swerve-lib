@@ -3,6 +3,7 @@ package com.ThePinkAlliance.swervelib.ctre;
 import com.ThePinkAlliance.swervelib.DriveController;
 import com.ThePinkAlliance.swervelib.DriveControllerFactory;
 import com.ThePinkAlliance.swervelib.ModuleConfiguration;
+import com.ThePinkAlliance.swervelib.ZeroState;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -112,6 +113,15 @@ public final class Falcon500DriveControllerFactoryBuilder {
         double sensorVelocityCoefficient) {
       this.motor = motor;
       this.sensorVelocityCoefficient = sensorVelocityCoefficient;
+    }
+
+    @Override
+    public void configureZeroState(ZeroState state) {
+      if (state == ZeroState.BRAKE) {
+        this.motor.setNeutralMode(NeutralMode.Brake);
+      } else if (state == ZeroState.COAST) {
+        this.motor.setNeutralMode(NeutralMode.Coast);
+      }
     }
 
     @Override

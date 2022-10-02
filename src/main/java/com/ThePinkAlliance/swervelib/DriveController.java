@@ -9,6 +9,8 @@ public interface DriveController {
 
   void configureStatusFrame(StatusFrame frame, int period);
 
+  void configureZeroState(ZeroState state);
+
   double getStateVelocity();
 
   double getPosition();

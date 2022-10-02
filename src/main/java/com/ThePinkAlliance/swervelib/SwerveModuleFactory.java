@@ -127,5 +127,10 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
       driveController.setReferenceVoltage(driveVoltage);
       steerController.setReferenceAngle(steerAngle);
     }
+
+    @Override
+    public void configureDriveZeroState(ZeroState state) {
+      this.driveController.configureZeroState(state);
+    }
   }
 }
