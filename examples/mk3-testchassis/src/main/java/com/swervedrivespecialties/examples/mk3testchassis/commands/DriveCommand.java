@@ -1,6 +1,7 @@
 package com.swervedrivespecialties.examples.mk3testchassis.commands;
 
 import com.swervedrivespecialties.examples.mk3testchassis.subsystems.DrivetrainSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -16,8 +17,7 @@ public class DriveCommand extends CommandBase {
             DrivetrainSubsystem drivetrain,
             DoubleSupplier translationXSupplier,
             DoubleSupplier translationYSupplier,
-            DoubleSupplier rotationSupplier
-    ) {
+            DoubleSupplier rotationSupplier) {
         this.drivetrain = drivetrain;
         this.translationXSupplier = translationXSupplier;
         this.translationYSupplier = translationYSupplier;
@@ -37,9 +37,7 @@ public class DriveCommand extends CommandBase {
                         translationXPercent * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                         translationYPercent * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                         rotationPercent * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-                        drivetrain.getRotation()
-                )
-        );
+                        new Rotation2d()));
     }
 
     @Override
