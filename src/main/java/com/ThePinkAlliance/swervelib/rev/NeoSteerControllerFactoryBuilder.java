@@ -2,7 +2,11 @@ package com.ThePinkAlliance.swervelib.rev;
 
 import static com.ThePinkAlliance.swervelib.rev.RevUtils.checkNeoError;
 
-import com.ThePinkAlliance.swervelib.*;
+import com.ThePinkAlliance.swervelib.AbsoluteEncoder;
+import com.ThePinkAlliance.swervelib.AbsoluteEncoderFactory;
+import com.ThePinkAlliance.swervelib.ModuleConfiguration;
+import com.ThePinkAlliance.swervelib.SteerController;
+import com.ThePinkAlliance.swervelib.SteerControllerFactory;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.revrobotics.*;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;

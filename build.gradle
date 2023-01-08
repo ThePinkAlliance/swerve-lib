@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id "edu.wpi.first.GradleRIO" version "2023.1.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -28,17 +29,17 @@ allprojects {
 }
 
 dependencies {
-    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2022.1.1'
+    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2023.1.1'
 
     // CTRE is implementation because it is not a hard requirement
-    implementation 'com.ctre.phoenix:api-java:5.20.2'
-    implementation 'com.ctre.phoenix:wpiapi-java:5.20.2'
+    implementation 'com.ctre.phoenix:api-java:5.30.2'
+    implementation 'com.ctre.phoenix:wpiapi-java:5.30.2'
 
     // Pink Alliance core library develop version, NOTE: Remove this before a production release.
-    implementation("com.github.ThePinkAlliance:core:d4be80f3ff")
+    // implementation("com.github.ThePinkAlliance:core:d4be80f3ff")
 
     // REV is implementation because it is not a hard requirement
-    implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
+    implementation 'com.revrobotics.frc:REVLib-java:2023.1.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
